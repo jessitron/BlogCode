@@ -1,18 +1,18 @@
-case class Result(meaning: String) 
+case class SecretMessage(meaning: String) 
 
 
-def test(f : String => Option[Result]) {
+def test(f : String => Option[SecretMessage]) {
    assert(f("nonexistentFile") == None, "nonexistent")
 
    assert(f("emptyFile") == None, "empty")
 
    assert(f("fileWithInvalidFormat") == None, "invalid format") 
 
-   assert(f("goodFile") == Some(Result("fart")), "good file not parsed")
+   assert(f("goodFile") == Some(SecretMessage("fart")), "good file not parsed")
    println("Four tests passed")
 }
 
-def imperativeStyle(filename : String) : Option[Result] = {
+def imperativeStyle(filename : String) : Option[SecretMessage] = {
   val file = new java.io.File(filename)
   if(!file.exists)
     None
@@ -27,7 +27,7 @@ def imperativeStyle(filename : String) : Option[Result] = {
       source.close
       val ExpectedFormat = "The secret message is '(.*)'".r
       firstLine match {
-        case ExpectedFormat(secretMessage) => Some(Result(secretMessage))
+        case ExpectedFormat(secretMessage) => Some(SecretMessage(secretMessage))
         case _ => None
       }
     }
@@ -56,16 +56,16 @@ object transformers {
     }
   }
 
-  def parseLine(line : String) : Option[Result] = {
+  def parseLine(line : String) : Option[SecretMessage] = {
     val ExpectedFormat = "The secret message is '(.*)'".r
     line match {
-      case ExpectedFormat(secretMessage) => Some(Result(secretMessage))
+      case ExpectedFormat(secretMessage) => Some(SecretMessage(secretMessage))
       case _ => None
     }
   }
 }
 
-def useTransforms(filename: String) : Option[Result] = {
+def useTransforms(filename: String) : Option[SecretMessage] = {
   import transformers._
   val fileOption = openFile(filename)
   if (fileOption.isEmpty) 
@@ -80,7 +80,7 @@ def useTransforms(filename: String) : Option[Result] = {
   }    
 }
    
-def patternMatching(filename:String) : Option[Result] = {
+def patternMatching(filename:String) : Option[SecretMessage] = {
   import transformers._
   openFile(filename) match {
     case None => None
@@ -93,17 +93,17 @@ def patternMatching(filename:String) : Option[Result] = {
   }
 }
 
-def chainOfMaps(filename:String) : Option[Result] = {
+def chainOfMaps(filename:String) : Option[SecretMessage] = {
   import transformers._
   openFile(filename).flatMap(readFirstLine).flatMap(parseLine)
 }
 
-def forComprehension(filename:String) : Option[Result] = {
+def forComprehension(filename:String) : Option[SecretMessage] = {
   import transformers._
   for( file <- openFile(filename);
        line <- readFirstLine(file);
-       result <- parseLine(line))
-  yield { result }  
+       SecretMessage <- parseLine(line))
+  yield { SecretMessage }  
 }
 
 test(imperativeStyle)
