@@ -102,8 +102,8 @@ def forComprehension(filename:String) : Option[SecretMessage] = {
   import transformers._
   for( file <- openFile(filename);
        line <- readFirstLine(file);
-       SecretMessage <- parseLine(line))
-  yield { SecretMessage }  
+       secretMessage <- parseLine(line))
+  yield { secretMessage }  
 }
 
 test(imperativeStyle)
