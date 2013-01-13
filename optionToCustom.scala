@@ -1,3 +1,6 @@
+
+case class SecretMessage(meaning: String) 
+
 sealed trait Result[A] {
   def flatMap[B](f : A => Result[B]) : Result[B]
   def map[B](f : A => B): Result[B]
@@ -12,14 +15,14 @@ case class Failure[A](message: String) extends Result[A] {
 }
 
 
-def test(f : String => Result[String]) {
+def test(f : String => Result[SecretMessage]) {
    assert(f("nonexistentFile") == Failure("File does not exist: nonexistentFile"), "nonexistent")
 
    assert(f("emptyFile") == Failure("File is empty"), "empty")
 
    assert(f("fileWithInvalidFormat") == Failure("Invalid format"), "invalid format") 
 
-   assert(f("goodFile") == Success("fart"), "good file not parsed")
+   assert(f("goodFile") == Success(SecretMessage("fart")), "good file not parsed")
    println("Four tests passed")
 }
 
@@ -45,16 +48,16 @@ object transformers {
     }
   }
 
-  def parseLine(line : String) : Result[String] = {
+  def parseLine(line : String) : Result[SecretMessage] = {
     val ExpectedFormat = "The secret message is '(.*)'".r
     line match {
-      case ExpectedFormat(secretMessage) => Success(secretMessage)
+      case ExpectedFormat(secretMessage) => Success(SecretMessage(secretMessage))
       case _ => Failure("Invalid format")
     }
   }
 }
 
-def forComprehension(filename:String) : Result[String] = {
+def forComprehension(filename:String) : Result[SecretMessage] = {
   import transformers._
   for( file <- openFile(filename);
        line <- readFirstLine(file);
@@ -63,3 +66,4 @@ def forComprehension(filename:String) : Result[String] = {
 }
 
 test(forComprehension)
+
