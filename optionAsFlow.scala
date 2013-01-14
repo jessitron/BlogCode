@@ -12,7 +12,8 @@ def test(f : String => Option[SecretMessage]) {
    println("Four tests passed")
 }
 
-def imperativeStyle(filename : String) : Option[SecretMessage] = {
+def imperativeStyle(filename : String) 
+  : Option[SecretMessage] = {
   val file = new java.io.File(filename)
   if(!file.exists)
     None
@@ -27,12 +28,10 @@ def imperativeStyle(filename : String) : Option[SecretMessage] = {
       source.close
       val ExpectedFormat = "The secret message is '(.*)'".r
       firstLine match {
-        case ExpectedFormat(secretMessage) => Some(SecretMessage(secretMessage))
+        case ExpectedFormat(secretMessage) => 
+          Some(SecretMessage(secretMessage))
         case _ => None
-      }
-    }
-  }
-}
+} } } }
 
 object transformers {
 
@@ -65,7 +64,8 @@ object transformers {
   }
 }
 
-def useTransforms(filename: String) : Option[SecretMessage] = {
+def useTransforms(filename: String) 
+  : Option[SecretMessage] = {
   import transformers._
   val fileOption = openFile(filename)
   if (fileOption.isEmpty) 
@@ -76,11 +76,10 @@ def useTransforms(filename: String) : Option[SecretMessage] = {
       None
     else {
       parseLine(lineOption.get)
-    }
-  }    
-}
+} } }
    
-def patternMatching(filename:String) : Option[SecretMessage] = {
+def patternMatching(filename:String) 
+  : Option[SecretMessage] = {
   import transformers._
   openFile(filename) match {
     case None => None
@@ -89,13 +88,14 @@ def patternMatching(filename:String) : Option[SecretMessage] = {
         case None => None
         case Some(line) =>
           parseLine(line)
-     } 
-  }
-}
+} } }
 
-def chainOfMaps(filename:String) : Option[SecretMessage] = {
+def chainOfMaps(filename:String) 
+  : Option[SecretMessage] = {
   import transformers._
-  openFile(filename).flatMap(readFirstLine).flatMap(parseLine)
+  openFile(filename).
+    flatMap(readFirstLine).
+    flatMap(parseLine)
 }
 
 def forComprehension(filename:String) : Option[SecretMessage] = {
