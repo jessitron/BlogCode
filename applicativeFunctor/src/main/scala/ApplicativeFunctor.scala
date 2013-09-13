@@ -48,6 +48,6 @@ object RetrieveAll {
     val wrappedEmpty: DbTask[Seq[Document]] = DbTask.of(Seq.empty[Document])
     def wrappedPrepend = DbTask.of((b: Seq[Document]) => (a: Document) => a +: b)
 
-    seqOfOps.foldRight[DbTask[Seq[Document]]](wrappedEmpty){(e, soFar) => e.apply(soFar.apply(wrappedPrepend))}
+    seqOfOps.foldRight(wrappedEmpty){(e, soFar) => e.apply(soFar.apply(wrappedPrepend))}
   }
 }
