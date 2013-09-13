@@ -1,3 +1,5 @@
+This code is for [this blog post](http://blog.jessitron.com/2013/09/a-realistic-use-case-for-applicative.html)
+
 Applicative functor: you wrap some food in a tortilla, you wrap the
 microwave in a tortilla, and you get hot food in a tortilla!
 — Jessica Kerr (@jessitron) September 10, 2013
