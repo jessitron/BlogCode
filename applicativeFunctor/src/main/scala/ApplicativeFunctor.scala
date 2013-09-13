@@ -1,6 +1,7 @@
 package jessitron.af
 
 
+
 sealed trait DbTask[A] {
   def apply[B](op: DbTask[A => B]): DbTask[B] = AndThen(this, op)
 
@@ -40,6 +41,13 @@ object PretendDbTasker extends DbTasker {
 
 }
 
+// todo: move this to different file
 object RetrieveAll {
-  def retrieveAll: Seq[DocID] => DbTask[Seq[Document]] = ???
+  def retrieveAll: Seq[DocID] => DbTask[Seq[Document]] = { ids =>
+    val seqOfOps = ids map DbTask.retrieveOne
+    val wrappedEmpty: DbTask[Seq[Document]] = DbTask.of(Seq.empty[Document])
+    def wrappedPrepend = DbTask.of((b: Seq[Document]) => (a: Document) => a +: b)
+
+    seqOfOps.foldRight[DbTask[Seq[Document]]](wrappedEmpty){(e, soFar) => e.apply(soFar.apply(wrappedPrepend))}
+  }
 }

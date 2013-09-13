@@ -21,11 +21,21 @@ class StackSpec extends FlatSpec with ShouldMatchers {
     PretendDbTasker(microwavedFood) should be("HOT food")
   }
 
-  /*"retrieveAll" should "return an operation that retrieves multiple" in {
+  "the apply method" should "do that wrapping thing in the right order" in {
+    val microwave: String => String = (s:String) => s"HOT $s"
+    val oven: String => String = (s:String) => s"very $s"
+
+    val microwavedFood: DbTask[String] = DbTask.of("food").apply(DbTask.of(microwave))
+    val ovenned: DbTask[String] = microwavedFood.apply(DbTask.of(oven))
+
+    PretendDbTasker(ovenned) should be("very HOT food")
+  }
+
+  "retrieveAll" should "return an operation that retrieves multiple" in {
      val multiRetrievalOperation = RetrieveAll.retrieveAll(Seq("chunky", "bacon"))
+     info("whatcha got? " + multiRetrievalOperation)
      PretendDbTasker(multiRetrievalOperation) should be (Seq("Pretend I retrieved chunky","Pretend I retrieved bacon"))
   }
-  */
 
 }
 
