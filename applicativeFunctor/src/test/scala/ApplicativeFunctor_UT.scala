@@ -6,6 +6,14 @@ import org.scalatest.matchers.ShouldMatchers
 
 class StackSpec extends FlatSpec with ShouldMatchers {
 
+  // The Goal
+  "retrieveAll" should "return an operation that retrieves multiple" in {
+     val multiRetrievalOperation = RetrieveAll.retrieveAll(Seq("chunky", "bacon"))
+     info("whatcha got? " + multiRetrievalOperation)
+     PretendDbTasker(multiRetrievalOperation) should be (Seq("Pretend I retrieved chunky","Pretend I retrieved bacon"))
+  }
+
+  // tests I wrote as I'm going along
   "A dbtask" should "pretend to retrieve rows from the database" in {
 
     val singleRetrieval = DbTask.retrieveOne("somedoc")
@@ -31,11 +39,6 @@ class StackSpec extends FlatSpec with ShouldMatchers {
     PretendDbTasker(ovenned) should be("very HOT food")
   }
 
-  "retrieveAll" should "return an operation that retrieves multiple" in {
-     val multiRetrievalOperation = RetrieveAll.retrieveAll(Seq("chunky", "bacon"))
-     info("whatcha got? " + multiRetrievalOperation)
-     PretendDbTasker(multiRetrievalOperation) should be (Seq("Pretend I retrieved chunky","Pretend I retrieved bacon"))
-  }
 
 }
 
